@@ -126,7 +126,7 @@ const CSS = `
 .btn-prim:hover:not(:disabled) { background: var(--a2); transform: translateY(-1px); }
 .btn-ghost { background: transparent; color: var(--sub); border: 1px solid var(--brd); }
 .btn-ghost:hover:not(:disabled) { color: var(--txt); border-color: var(--brd2); background: var(--bg3); }
-.btn-danger { background: transparent; color: #dc2626; padding: 8px; border: 1px solid transparent; }
+.btn-danger { background: transparent; color: #dc2626; padding: 8px; border: 1px solid transparent; min-height: 44px; min-width: 44px; display: inline-flex; align-items: center; justify-content: center; }
 .btn-danger:hover { background: rgba(220,38,38,0.1); border-color: rgba(220,38,38,0.2); }
 .btn:disabled { opacity: 0.6; cursor: not-allowed; }
 
@@ -152,7 +152,7 @@ const CSS = `
 .item-desc { font-size: 12px; color: var(--sub); display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; max-width: 280px; }
 
 /* Inline Edit Input */
-.inp-price { width: 80px; padding: 8px 12px; border: 1px solid transparent; border-radius: var(--r); background: transparent; font-family: var(--fd); font-size: 16px; color: var(--a); font-weight: 700; transition: all var(--t); }
+.inp-price { width: 80px; padding: 8px 12px; border: 1px solid transparent; border-radius: var(--r); background: transparent; font-family: var(--fd); font-size: 16px; color: var(--a); font-weight: 700; transition: all var(--t); min-height: 44px; }
 .inp-price:hover { background: var(--bg3); border-color: var(--brd); }
 .inp-price:focus { background: var(--bg); border-color: var(--a); outline: none; }
 
@@ -164,7 +164,7 @@ const CSS = `
 input:checked + .slider { background-color: var(--grn); }
 input:focus-visible + .slider { outline: 2px solid var(--a); outline-offset: 2px; }
 input:checked + .slider:before { transform: translateX(18px); }
-.switch-wrap { display: flex; align-items: center; gap: 8px; }
+.switch-wrap { display: flex; align-items: center; gap: 8px; min-height: 44px; }
 .switch-lbl { font-size: 12px; font-weight: 600; color: var(--sub); }
 
 /* Modal */
@@ -174,7 +174,7 @@ input:checked + .slider:before { transform: translateX(18px); }
 @keyframes slideUp { from { transform: translateY(20px); opacity: 0 } to { transform: translateY(0); opacity: 1 } }
 .modal-hdr { padding: 24px; border-bottom: 1px solid var(--brd); display: flex; justify-content: space-between; align-items: center; }
 .modal-title { font-family: var(--fd); font-size: 20px; font-weight: 900; color: var(--txt); text-transform: uppercase; }
-.modal-close { background: none; border: none; color: var(--sub); cursor: pointer; padding: 4px; border-radius: 4px; }
+.modal-close { background: none; border: none; color: var(--sub); cursor: pointer; padding: 4px; border-radius: 4px; min-height: 44px; min-width: 44px; display: inline-flex; align-items: center; justify-content: center; }
 .modal-close:hover { background: var(--bg3); color: var(--txt); }
 .modal-body { padding: 24px; overflow-y: auto; display: flex; flex-direction: column; gap: 16px; }
 .modal-ftr { padding: 24px; border-top: 1px solid var(--brd); display: flex; justify-content: flex-end; gap: 12px; }
@@ -186,23 +186,38 @@ input:checked + .slider:before { transform: translateX(18px); }
 .inp:focus { outline: none; border-color: var(--a); }
 textarea.inp { resize: vertical; min-height: 80px; }
 
-/* Responsive Table */
+/* Responsive Adjustments */
 @media (max-width: 768px) {
+  /* Tabs */
+  .tabs { width: 100%; justify-content: flex-start; overflow-x: auto; -webkit-overflow-scrolling: touch; border-radius: 8px; }
+  .tab { flex: 1 0 auto; text-align: center; }
+  
+  /* Modal */
+  .modal-overlay { padding: 0; align-items: flex-end; }
+  .modal { max-width: 100%; width: 100%; border-radius: 20px 20px 0 0; max-height: 90vh; border-bottom: none; border-left: none; border-right: none; margin: 0; }
+  
+  /* Table to Cards */
   .tbl-wrap { border: none; background: transparent; }
   .tbl, .tbl tbody, .tbl tr, .tbl td { display: block; width: 100%; }
   .tbl thead { display: none; }
-  .tbl tr { background: var(--bg2); border: 1px solid var(--brd); border-radius: var(--rl); margin-bottom: 16px; padding: 16px; }
-  .tbl td { padding: 10px 0; border: none; display: flex; align-items: center; justify-content: space-between; gap: 16px; }
-  .tbl td::before { content: attr(data-label); font-size: 10px; font-weight: 700; color: var(--dim); text-transform: uppercase; letter-spacing: 0.1em; min-width: 90px; }
-  .td-info { flex-direction: column; align-items: flex-start !important; }
-  .td-info::before { display: none; }
+  .tbl tr { 
+    background: var(--bg2); border: 1px solid var(--brd); border-radius: var(--rl); 
+    margin-bottom: 16px; padding: 16px; display: flex; flex-wrap: wrap; gap: 16px; align-items: center;
+  }
+  .tbl td { padding: 0; border: none; }
+  .tbl td::before { display: none; }
+  
+  .td-info { flex-basis: 100%; width: 100%; }
+  .td-info .item-info { align-items: flex-start; }
   .item-desc { max-width: 100%; }
-  .td-actions { justify-content: flex-end; }
-  .td-actions::before { display: none; }
+  
+  .td-price { flex: 1; }
+  .td-status { flex: 1; display: flex; justify-content: center; }
+  .td-actions { flex: 0 0 auto; display: flex; justify-content: flex-end; }
 }
 
 /* Fallback Login */
-.login-wrap { max-width: 320px; margin: 120px auto; background: var(--bg2); padding: 40px 32px; border-radius: var(--rl); border: 1px solid var(--brd); box-shadow: 0 12px 32px rgba(0,0,0,.08); }
+.login-wrap { width: 100%; max-width: 360px; margin: 0 auto; background: var(--bg2); padding: 40px 32px; border-radius: var(--rl); border: 1px solid var(--brd); box-shadow: 0 12px 32px rgba(0,0,0,.08); }
 .login-title { font-family: var(--fd); font-size: 28px; color: var(--txt); text-align: center; margin-bottom: 8px; text-transform: uppercase; }
 .login-sub { font-size: 11px; font-weight: 700; color: var(--dim); text-align: center; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 32px; }
 .msg { padding: 12px 16px; border-radius: var(--r); font-size: 13px; font-weight: 600; text-align: center; margin-bottom: 16px; }
@@ -406,8 +421,9 @@ export default function AdminDashboard() {
       <div className={`ca ${theme}`}>
         
         {sessionExpired ? (
-          <div className="login-wrap">
-            <h1 className="login-title">Café Aromas</h1>
+          <div style={{ display: 'flex', minHeight: '100vh', alignItems: 'center', justifyContent: 'center', padding: '24px' }}>
+            <div className="login-wrap">
+              <h1 className="login-title">Café Aromas</h1>
             <div className="login-sub">Acceso Restringido</div>
             
             {loginError && <div className="msg msg-err">{loginError}</div>}
@@ -424,7 +440,8 @@ export default function AdminDashboard() {
               <button type="submit" className="btn btn-prim" disabled={loggingIn || !password} style={{ width: '100%', padding: '12px' }}>
                 {loggingIn ? 'Autenticando...' : 'Ingresar'}
               </button>
-            </form>
+              </form>
+            </div>
           </div>
         ) : (
           <>
@@ -491,7 +508,7 @@ export default function AdminDashboard() {
                                 </div>
                               </div>
                             </td>
-                            <td data-label="Precio (S/)">
+                            <td data-label="Precio (S/)" className="td-price">
                               <input 
                                 type="number" 
                                 className="inp-price" 
@@ -502,7 +519,7 @@ export default function AdminDashboard() {
                                 aria-label="Editar precio"
                               />
                             </td>
-                            <td data-label="Estado">
+                            <td data-label="Estado" className="td-status">
                               <label className="switch-wrap">
                                 <div className="switch">
                                   <input 

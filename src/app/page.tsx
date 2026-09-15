@@ -27,8 +27,6 @@ function IcoFileTsx() {
   );
 }
 
-
-
 function IcoChevron({ open }: { open: boolean }) {
   return (
     <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true" style={{ transform: open ? 'rotate(90deg)' : 'rotate(0deg)', transition: 'transform 0.2s', opacity: 0.6 }}>
@@ -63,7 +61,7 @@ function IcoSun() {
 
 function LogoCJBS() {
   return (
-    <svg width="140" height="70" viewBox="0 0 140 70" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <svg className="ide-logo" viewBox="0 0 140 70" fill="none" xmlns="http://www.w3.org/2000/svg">
       <text x="70" y="42" fontFamily="sans-serif" fontSize="42" fontWeight="900" fill="var(--ide-txt)" textAnchor="middle" letterSpacing="-0.04em">
         CJBS<tspan fill="var(--ide-accent)">.</tspan>
       </text>
@@ -123,6 +121,12 @@ const CSS = `
   justify-content: space-between;
   padding: 16px 24px;
   border-bottom: 1px solid var(--ide-guide);
+}
+
+.ide-logo {
+  width: 140px;
+  height: 70px;
+  transition: width 0.3s, height 0.3s;
 }
 
 .ide-theme-toggle {
@@ -247,15 +251,44 @@ const CSS = `
   outline-offset: -1px;
 }
 
-@media (max-width: 600px) {
-  .tree-item-comment {
-    display: none; /* Hide comments on small screens to keep it clean */
+@media (max-width: 768px) {
+  .ide-logo {
+    width: 100px;
+    height: 50px;
   }
+  
+  .ide-header {
+    padding: 12px 16px;
+  }
+  
+  .ide-main {
+    padding: 24px 16px;
+  }
+
   .tree-branch {
     padding-left: 12px;
   }
+
   .tree-branch::before {
     left: 4px;
+  }
+
+  .tree-item-inner {
+    flex-wrap: wrap;
+    align-items: flex-start;
+  }
+
+  .tree-item-name {
+    flex: 1;
+    min-width: 100px;
+  }
+
+  .tree-item-comment {
+    white-space: normal !important;
+    margin-left: 36px;
+    flex-basis: 100%;
+    margin-top: 4px;
+    line-height: 1.4;
   }
 }
 `;
@@ -265,6 +298,7 @@ const CSS = `
 export default function CJBSLandingPage() {
   const [theme, setTheme] = useState<'dark' | 'light'>('dark');
   const [mounted, setMounted] = useState(false);
+  const [isOpen, setIsOpen] = useState(true);
 
   useEffect(() => {
     setMounted(true);
@@ -290,13 +324,13 @@ export default function CJBSLandingPage() {
     <>
       <style dangerouslySetInnerHTML={{ __html: CSS }} />
       <div className={`ide-wrapper ${theme === 'light' ? 'ide-light' : 'ide-dark'}`}>
-        
+
         {/* Header */}
         <header className="ide-header">
           <div style={{ width: '40px' }} /> {/* Spacer for centering */}
           <LogoCJBS />
-          <button 
-            className="ide-theme-toggle" 
+          <button
+            className="ide-theme-toggle"
             onClick={toggleTheme}
             aria-label="Toggle Theme"
             title="Toggle Light/Dark Mode"
@@ -308,49 +342,63 @@ export default function CJBSLandingPage() {
         {/* Main Directory Tree */}
         <main className="ide-main">
           <div className="ide-tree-container" role="tree" aria-label="CJBS Studio Projects">
-            
+
             {/* Root Folder */}
-            <div className="tree-row delay-0" style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '6px 8px', fontWeight: 'bold' }}>
-              <IcoChevron open={true} />
-              <IcoFolder open={true} />
+            <div
+              className="tree-row delay-0"
+              style={{ display: 'flex', alignItems: 'center', gap: '8px', padding: '6px 8px', fontWeight: 'bold', cursor: 'pointer', userSelect: 'none' }}
+              onClick={() => setIsOpen(!isOpen)}
+              role="treeitem"
+              aria-expanded={isOpen}
+            >
+              <IcoChevron open={isOpen} />
+              <IcoFolder open={isOpen} />
               <span>cjbs-studio/</span>
             </div>
 
-            <div className="tree-branch">
-              
-              {/* Project 1 */}
-              <Link href="/barberia" className="tree-item tree-row delay-1" role="treeitem">
-                <div className="tree-item-inner">
-                  <span style={{ width: '12px' }} /> {/* indent matching chevron */}
-                  <IcoFileTsx />
-                  <span className="tree-item-name">barberia</span>
-                  <span className="tree-item-comment">// barbería clásica, reservas por WhatsApp</span>
-                </div>
-              </Link>
+            <div style={{
+              display: 'grid',
+              gridTemplateRows: isOpen ? '1fr' : '0fr',
+              transition: 'grid-template-rows 0.3s ease-out',
+            }}>
+              <div style={{ overflow: 'hidden' }}>
+                <div className="tree-branch">
 
-              {/* Project 2 */}
-              <Link href="/cafe" className="tree-item tree-row delay-2" role="treeitem">
-                <div className="tree-item-inner" style={{ alignItems: 'flex-start' }}>
-                  <span style={{ width: '12px', marginTop: '2px' }} />
-                  <div style={{ marginTop: '2px' }}><IcoFileTsx /></div>
-                  <span className="tree-item-name" style={{ marginTop: '2px' }}>cafe-aromas</span>
-                  <div className="tree-item-comment" style={{ display: 'flex', flexDirection: 'column', gap: '4px', whiteSpace: 'normal' }}>
-                    <span>// menú interactivo y pedidos</span>
-                    <span>// panel de administración: /cafe/admin — contraseña: Cafe2004</span>
-                  </div>
-                </div>
-              </Link>
+                  {/* Project 1 */}
+                  <Link href="/barberia" className="tree-item tree-row delay-1" role="treeitem">
+                    <div className="tree-item-inner">
+                      <span style={{ width: '12px' }} /> {/* indent matching chevron */}
+                      <IcoFileTsx />
+                      <span className="tree-item-name">barberia</span>
+                      <span className="tree-item-comment">// barbería clásica, reservas por WhatsApp</span>
+                    </div>
+                  </Link>
 
-              {/* Project 3 */}
-              <Link href="/tienda" className="tree-item tree-row delay-3" role="treeitem">
-                <div className="tree-item-inner">
-                  <span style={{ width: '12px' }} />
-                  <IcoFileTsx />
-                  <span className="tree-item-name">tienda</span>
-                  <span className="tree-item-comment">// tienda e-commerce estilo hypebeast</span>
-                </div>
-              </Link>
+                  {/* Project 2 */}
+                  <Link href="/cafe" className="tree-item tree-row delay-2" role="treeitem">
+                    <div className="tree-item-inner" style={{ alignItems: 'flex-start' }}>
+                      <span style={{ width: '12px', marginTop: '2px' }} />
+                      <div style={{ marginTop: '2px' }}><IcoFileTsx /></div>
+                      <span className="tree-item-name" style={{ marginTop: '2px' }}>cafe-aromas</span>
+                      <div className="tree-item-comment" style={{ display: 'flex', flexDirection: 'column', gap: '4px' }}>
+                        <span>// menú interactivo y pedidos</span>
+                        <span>// panel de administración: /cafe/admin — contraseña: Cafe2004</span>
+                      </div>
+                    </div>
+                  </Link>
 
+                  {/* Project 3 */}
+                  <Link href="/tienda" className="tree-item tree-row delay-3" role="treeitem">
+                    <div className="tree-item-inner">
+                      <span style={{ width: '12px' }} />
+                      <IcoFileTsx />
+                      <span className="tree-item-name">tienda</span>
+                      <span className="tree-item-comment">// tienda e-commerce estilo hypebeast</span>
+                    </div>
+                  </Link>
+
+                </div>
+              </div>
             </div>
           </div>
         </main>
@@ -358,3 +406,4 @@ export default function CJBSLandingPage() {
     </>
   );
 }
+
