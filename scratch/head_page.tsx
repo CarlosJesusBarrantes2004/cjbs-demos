@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useEffect, useCallback, useRef } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 
 // ─── WhatsApp ─────────────────────────────────────────────────────────────────
 
@@ -29,12 +29,89 @@ interface MenuItem {
   precio: number;
   img: string;
   badge?: string;
-  disponible?: boolean;
 }
 
 const CATS: Cat[] = ['Bebidas', 'Desayunos', 'Postres'];
 
-// Menu is now fetched from the API
+const MENU: MenuItem[] = [
+  // Bebidas
+  {
+    id: 'americano', cat: 'Bebidas', nombre: 'Café Americano', precio: 8,
+    desc: 'Espresso doble con agua caliente. Perfecto para empezar el día sin rodeos.',
+    img: 'https://images.unsplash.com/photo-1509042239860-f550ce710b93?w=600&q=80&fit=crop&crop=center',
+    badge: 'Más pedido',
+  },
+  {
+    id: 'latte', cat: 'Bebidas', nombre: 'Latte de Vainilla', precio: 12,
+    desc: 'Espresso con leche vaporizada y sirope de vainilla artesanal.',
+    img: 'https://images.unsplash.com/photo-1561882468-9110e03e0f78?w=600&q=80&fit=crop&crop=center',
+  },
+  {
+    id: 'cappuccino', cat: 'Bebidas', nombre: 'Cappuccino Clásico', precio: 11,
+    desc: 'Espresso, leche caliente y espuma densa en proporciones perfectas.',
+    img: 'https://images.unsplash.com/photo-1534040385115-33dcb3acba5b?w=600&q=80&fit=crop&crop=center',
+  },
+  {
+    id: 'matcha', cat: 'Bebidas', nombre: 'Matcha Latte', precio: 14,
+    desc: 'Matcha ceremonial japonés con leche de avena. Energía sin ansiedad.',
+    img: 'https://images.unsplash.com/photo-1536256263959-770b48d82b0a?w=600&q=80&fit=crop&crop=center',
+    badge: 'Favorito',
+  },
+  {
+    id: 'te', cat: 'Bebidas', nombre: 'Infusión de Hierbas', precio: 8,
+    desc: 'Selección de hierbas frescas: menta, jengibre o manzanilla. Elige la tuya.',
+    img: 'https://images.unsplash.com/photo-1556679343-c7306c1976bc?w=600&q=80&fit=crop&crop=center',
+  },
+  {
+    id: 'cold-brew', cat: 'Bebidas', nombre: 'Cold Brew 24h', precio: 13,
+    desc: 'Café en frío extraído durante 24 horas. Suave, concentrado y sin amargura.',
+    img: 'https://images.unsplash.com/photo-1461023058943-07fcbe16d735?w=600&q=80&fit=crop&crop=center',
+  },
+  // Desayunos
+  {
+    id: 'palta', cat: 'Desayunos', nombre: 'Tostadas con Palta y Huevo', precio: 18,
+    desc: 'Pan artesanal tostado, palta aplastada, huevo pochado y sal de mar.',
+    img: 'https://images.unsplash.com/photo-1603046891729-da3c0e4e5f4f?w=600&q=80&fit=crop&crop=center',
+    badge: 'Chef recomienda',
+  },
+  {
+    id: 'granola', cat: 'Desayunos', nombre: 'Bowl de Granola', precio: 16,
+    desc: 'Granola horneada en casa, yogurt griego, frutas de temporada y miel de abeja.',
+    img: 'https://images.unsplash.com/photo-1504674900247-0877df9cc836?w=600&q=80&fit=crop&crop=top',
+  },
+  {
+    id: 'pancakes', cat: 'Desayunos', nombre: 'Pancakes con Miel', precio: 20,
+    desc: 'Torre de tres pancakes esponjosos con miel de maracuyá y mantequilla.',
+    img: 'https://images.unsplash.com/photo-1567620905732-2d1ec7ab7445?w=600&q=80&fit=crop&crop=center',
+  },
+  {
+    id: 'sandwich', cat: 'Desayunos', nombre: 'Sándwich Club Aromas', precio: 22,
+    desc: 'Pan ciabatta, pollo a la plancha, tocino crocante, lechuga y tomate cherry.',
+    img: 'https://images.unsplash.com/photo-1528735602780-2552fd46c7af?w=600&q=80&fit=crop&crop=center',
+  },
+  // Postres
+  {
+    id: 'cheesecake', cat: 'Postres', nombre: 'Cheesecake de Maracuyá', precio: 14,
+    desc: 'Base de galleta, relleno cremoso y coulis de maracuyá fresco. Sin gelatina.',
+    img: 'https://images.unsplash.com/photo-1565958011703-44f9829ba187?w=600&q=80&fit=crop&crop=center',
+    badge: 'Postre estrella',
+  },
+  {
+    id: 'brownie', cat: 'Postres', nombre: 'Brownie con Helado', precio: 16,
+    desc: 'Brownie de chocolate 70% cacao, tibio, con una bola de helado de vainilla.',
+    img: 'https://images.unsplash.com/photo-1606313564200-e75d5e30476c?w=600&q=80&fit=crop&crop=center',
+  },
+  {
+    id: 'tiramisu', cat: 'Postres', nombre: 'Tiramisú Artesanal', precio: 15,
+    desc: 'Receta italiana con mascarpone real, café espresso y cacao amargo en polvo.',
+    img: 'https://images.unsplash.com/photo-1571877227200-a0d98ea607e9?w=600&q=80&fit=crop&crop=center',
+  },
+  {
+    id: 'muffin', cat: 'Postres', nombre: 'Muffin de Arándanos', precio: 10,
+    desc: 'Horno propio, arándanos frescos y cobertura de crumble. Recién horneado.',
+    img: 'https://images.unsplash.com/photo-1607958996333-41aef7caefaa?w=600&q=80&fit=crop&crop=center',
+  },
+];
 
 // ─── Icons ────────────────────────────────────────────────────────────────────
 
@@ -123,113 +200,6 @@ function IcoPlug() {
   );
 }
 
-function IcoSun() {
-  return (
-    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-      <circle cx="12" cy="12" r="5"></circle>
-      <line x1="12" y1="1" x2="12" y2="3"></line>
-      <line x1="12" y1="21" x2="12" y2="23"></line>
-      <line x1="4.22" y1="4.22" x2="5.64" y2="5.64"></line>
-      <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"></line>
-      <line x1="1" y1="12" x2="3" y2="12"></line>
-      <line x1="21" y1="12" x2="23" y2="12"></line>
-      <line x1="4.22" y1="19.78" x2="5.64" y2="18.36"></line>
-      <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"></line>
-    </svg>
-  );
-}
-
-function IcoMoon() {
-  return (
-    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
-      <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"></path>
-    </svg>
-  );
-}
-
-function IcoSeal() {
-  return (
-    <svg viewBox="0 0 100 100" fill="currentColor">
-      <path id="curve" d="M 50, 50 m -40, 0 a 40,40 0 1,1 80,0 a 40,40 0 1,1 -80,0" fill="transparent" />
-      <text fontSize="12" fontWeight="700" letterSpacing="3.5" fill="currentColor">
-        <textPath href="#curve" startOffset="0%">CAFÉ AROMAS • 100% ARTESANAL •</textPath>
-      </text>
-      <circle cx="50" cy="50" r="14" fill="currentColor" opacity="0.8" />
-    </svg>
-  );
-}
-
-// ─── Component ────────────────────────────────────────────────────────────────
-
-function MenuCard({ item, onClick, selectedItemId }: { item: MenuItem, onClick: (item: MenuItem) => void, selectedItemId?: string | null }) {
-  const [rotation, setRotation] = useState({ x: 0, y: 0 });
-
-  const handleMouseMove = (e: React.MouseEvent<HTMLElement>) => {
-    const el = e.currentTarget;
-    const rect = el.getBoundingClientRect();
-    const x = e.clientX - rect.left;
-    const y = e.clientY - rect.top;
-
-    // Calculate rotation limits (-5deg to 5deg)
-    const centerX = rect.width / 2;
-    const centerY = rect.height / 2;
-
-    const rotateX = ((centerY - y) / centerY) * 8;
-    const rotateY = ((x - centerX) / centerX) * 8;
-
-    setRotation({ x: rotateX, y: rotateY });
-  };
-
-  const handleMouseLeave = () => {
-    setRotation({ x: 0, y: 0 });
-  };
-
-  return (
-    <article
-      className="m-card"
-      aria-label={`${item.nombre} — S/ ${item.precio}`}
-      onMouseMove={handleMouseMove}
-      onMouseLeave={handleMouseLeave}
-      onClick={() => onClick(item)}
-      style={{ transform: `perspective(1000px) rotateX(${rotation.x}deg) rotateY(${rotation.y}deg)`, cursor: 'pointer' }}
-    >
-      <div className="m-card-inner">
-        <div className="m-card-img-wrap">
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            src={item.img}
-            alt={item.nombre}
-            className="m-card-img"
-            loading="lazy"
-            style={{ viewTransitionName: item.id === selectedItemId ? 'none' : `card-img-${item.id}` }}
-          />
-          {item.badge && (
-            <span className="m-badge">{item.badge}</span>
-          )}
-        </div>
-        <div className="m-card-body">
-          <h3 className="m-name">{item.nombre}</h3>
-          <p className="m-desc">{item.desc}</p>
-          <div className="m-foot">
-            <div className="m-price" aria-label={`Precio: S/ ${item.precio}`}>
-              <span>S/ </span>{item.precio}
-            </div>
-            <a
-              href={waItem(item.nombre)}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="btn btn-item"
-              aria-label={`Pedir ${item.nombre} por WhatsApp`}
-            >
-              <IcoWA size={13} /> Pedir
-            </a>
-          </div>
-        </div>
-      </div>
-    </article>
-  );
-}
-
 // ─── Styles ───────────────────────────────────────────────────────────────────
 
 const CSS = `
@@ -250,9 +220,6 @@ const CSS = `
   --a-bg:  rgba(196,98,45,.09);
   --a-brd: rgba(196,98,45,.28);
   --grn:   #1db954;
-  --ftr-bg: #1c110a;
-  --ftr-txt: #f9f5ef;
-  --ftr-txt-rgb: 249, 245, 239;
   --r:     8px;
   --rl:    16px;
   --e:     cubic-bezier(.4,0,.2,1);
@@ -266,30 +233,6 @@ const CSS = `
   min-height: 100vh;
   overflow-x: hidden;
 }
-
-/* ── DARK MODE TOKENS ────────────────────────────────────── */
-.ca.dark {
-  --bg:    #1a1614;
-  --bg2:   #231d1a;
-  --bg3:   #2e2723;
-  --brd:   #3e3530;
-  --brd2:  #4f443e;
-  --txt:   #f9f5ef;
-  --sub:   #c1b2a6;
-  --dim:   #928377;
-  --a:     #d97740;
-  --a2:    #e58b57;
-  --a-bg:  rgba(217, 119, 64, 0.12);
-  --a-brd: rgba(217, 119, 64, 0.28);
-  --ftr-bg: #0a0807;
-  --ftr-txt: #f9f5ef;
-  --ftr-txt-rgb: 249, 245, 239;
-}
-.ca.dark .hdr.on { background: rgba(26,22,20,.95); }
-.ca.dark .hero-badge { background: rgba(35,29,26,.92); box-shadow: 0 4px 24px rgba(0,0,0,.4); }
-.ca.dark .m-card:hover { box-shadow: 0 8px 28px rgba(0,0,0,.3); }
-.ca.dark .btn-prim { box-shadow: 0 2px 12px rgba(217,119,64,.15); }
-.ca.dark .btn-prim:hover { box-shadow: 0 4px 18px rgba(217,119,64,.25); }
 
 /* ── BASE ────────────────────────────────────────────────── */
 .ca *, .ca *::before, .ca *::after { box-sizing: border-box; }
@@ -312,10 +255,6 @@ const CSS = `
 .hdr { position: fixed; inset: 0 0 auto; z-index: 200; padding: 20px 0; transition: background var(--t) var(--e), box-shadow var(--t) var(--e), padding var(--t) var(--e); }
 .hdr.on { background: rgba(249,245,239,.95); box-shadow: 0 1px 0 var(--brd); padding: 13px 0; backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); }
 .hdr-i { max-width: 1140px; margin: 0 auto; padding: 0 24px; display: flex; align-items: center; gap: 10px; }
-
-.t-toggle { background: none; border: none; cursor: pointer; color: var(--sub); display: flex; align-items: center; justify-content: center; width: 36px; height: 36px; border-radius: 50%; transition: color var(--t) var(--e), background var(--t) var(--e); flex-shrink: 0; }
-.t-toggle:hover { color: var(--txt); background: var(--bg3); }
-.t-toggle:focus-visible { outline: 2px solid var(--a); }
 
 /* Logo */
 .logo { display: flex; flex-direction: column; text-decoration: none; gap: 0; }
@@ -357,25 +296,19 @@ const CSS = `
 .btn-item:hover { background: var(--a); color: #fff; border-color: var(--a); }
 
 /* ── HERO ────────────────────────────────────────────────── */
-.hero { padding-top: 96px; display: grid; grid-template-columns: 1fr 1fr; min-height: 100svh; background: var(--bg); position: relative; }
-.hero-l { display: flex; flex-direction: column; justify-content: center; padding: 64px 48px 64px 0; padding-left: max(24px, calc((100vw - 1140px) / 2 + 24px)); position: relative; }
+.hero { padding-top: 96px; display: grid; grid-template-columns: 1fr 1fr; min-height: 100svh; background: var(--bg); }
+.hero-l { display: flex; flex-direction: column; justify-content: center; padding: 64px 48px 64px 0; padding-left: max(24px, calc((100vw - 1140px) / 2 + 24px)); }
 .hero-r { position: relative; overflow: hidden; background: var(--bg3); }
-.hero-img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; animation: pb linear both; animation-timeline: scroll(); transform-origin: top; }
-@keyframes pb { to { transform: translateY(10%) scale(1.1); } }
-
-/* Seal */
-.seal-wrap { position: absolute; right: 0px; top: 120px; width: 120px; height: 120px; color: var(--a); pointer-events: none; z-index: 10; opacity: 0.8; animation: spin linear both; animation-timeline: scroll(); }
-@keyframes spin { to { transform: rotate(720deg); } }
+.hero-img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
 
 /* Nota sobre el café */
 .hero-note { display: inline-flex; align-items: center; gap: 8px; font-size: 11px; font-weight: 700; letter-spacing: .1em; text-transform: uppercase; color: var(--a); margin-bottom: 24px; }
 .hero-note::before { content: ''; width: 24px; height: 2px; background: var(--a); flex-shrink: 0; }
 
-.hero-h1 { font-family: var(--fd); font-size: clamp(48px, 6.5vw, 92px); line-height: .88; text-transform: uppercase; color: var(--txt); margin-bottom: 24px; font-weight: 900; }
-.hero-h1 mark { background: none; color: var(--a); display: inline-block; transform: rotate(-3deg) translateY(4px); transform-origin: left center; }
-.hero-h1-row { display: block; letter-spacing: -0.04em; }
+.hero-h1 { font-family: var(--fd); font-size: clamp(44px, 6vw, 80px); line-height: .95; letter-spacing: .02em; text-transform: uppercase; color: var(--txt); margin-bottom: 18px; font-weight: 900; }
+.hero-h1 mark { background: none; color: var(--a); }
 
-.hero-sub { font-size: clamp(15px, 1.4vw, 17px); line-height: 1.68; color: var(--sub); font-weight: 300; margin-bottom: 40px; max-width: 400px; padding-left: 8px; border-left: 2px solid var(--brd); }
+.hero-sub { font-size: clamp(15px, 1.4vw, 17px); line-height: 1.68; color: var(--sub); font-weight: 300; margin-bottom: 36px; max-width: 400px; }
 
 .hero-proof { display: flex; gap: 28px; margin-bottom: 36px; }
 .hp-item { display: flex; flex-direction: column; gap: 2px; }
@@ -403,26 +336,19 @@ const CSS = `
 .tab:focus-visible { outline: 2px solid var(--a); outline-offset: 2px; }
 
 /* Grid de items */
-.menu-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; grid-auto-flow: dense; }
+.menu-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
 
 /* Card de ítem de menú */
-.m-card { background: var(--bg2); border: 1px solid var(--brd); border-radius: var(--rl); overflow: hidden; display: flex; flex-direction: column; transition: box-shadow 0.4s var(--e), border-color var(--t) var(--e); transform-style: preserve-3d; position: relative; }
-.m-card:hover { box-shadow: 0 20px 40px rgba(0,0,0,.08); border-color: var(--brd2); z-index: 10; }
-.m-card-inner { pointer-events: none; display: flex; flex-direction: column; height: 100%; background: var(--bg2); transform: translateZ(30px); transition: transform 0.15s linear; }
-
-/* Highlighted card in asymmetric grid */
-.m-card:nth-child(5n + 1) { grid-column: span 2; grid-row: span 2; }
-.m-card:nth-child(5n + 1) .m-name { font-size: 24px; margin-bottom: 4px; }
-.m-card:nth-child(5n + 1) .m-desc { font-size: 15px; }
-
-.m-card-img-wrap { position: relative; aspect-ratio: 4/3; overflow: hidden; background: var(--bg3); flex-shrink: 0; }
-.m-card-img { width: 100%; height: 100%; object-fit: cover; transition: transform .6s var(--e); }
-.m-card:hover .m-card-img { transform: scale(1.08); }
+.m-card { background: var(--bg2); border: 1px solid var(--brd); border-radius: var(--rl); overflow: hidden; display: flex; flex-direction: column; transition: box-shadow var(--t) var(--e), transform var(--t) var(--e), border-color var(--t) var(--e); }
+.m-card:hover { box-shadow: 0 8px 28px rgba(28,17,10,.1); transform: translateY(-3px); border-color: var(--brd2); }
+.m-card-img-wrap { position: relative; aspect-ratio: 4/3; overflow: hidden; background: var(--bg3); }
+.m-card-img { width: 100%; height: 100%; object-fit: cover; transition: transform .4s var(--e); }
+.m-card:hover .m-card-img { transform: scale(1.04); }
 .m-badge { position: absolute; top: 12px; left: 12px; background: var(--a); color: #fff; font-size: 9px; font-weight: 800; letter-spacing: .12em; text-transform: uppercase; padding: 4px 9px; border-radius: 4px; }
 .m-card-body { padding: 18px 20px 20px; display: flex; flex-direction: column; gap: 8px; flex: 1; }
-.m-name { font-size: 16px; font-weight: 700; color: var(--txt); line-height: 1.2; }
+.m-name { font-size: 15px; font-weight: 700; color: var(--txt); line-height: 1.25; }
 .m-desc { font-size: 13px; color: var(--sub); line-height: 1.55; font-weight: 300; flex: 1; }
-.m-foot { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding-top: 14px; border-top: 1px solid var(--brd); flex-wrap: wrap; pointer-events: auto; }
+.m-foot { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding-top: 12px; border-top: 1px solid var(--brd); flex-wrap: wrap; }
 .m-price { font-family: var(--fd); font-size: 22px; letter-spacing: .03em; color: var(--a); line-height: 1; font-weight: 900; }
 .m-price span { font-family: var(--fb); font-size: 13px; font-weight: 700; opacity: .7; }
 
@@ -457,22 +383,22 @@ const CSS = `
 .cta-num-label { font-size: 10px; font-weight: 700; color: var(--dim); letter-spacing: .1em; text-transform: uppercase; margin-bottom: 6px; }
 
 /* ── FOOTER ──────────────────────────────────────────────── */
-.ftr { background: var(--ftr-bg); color: var(--ftr-txt); padding: 36px 0 24px; }
-.ftr-i { display: flex; align-items: center; gap: 20px; flex-wrap: wrap; padding-bottom: 22px; border-bottom: 1px solid rgba(var(--ftr-txt-rgb),.08); margin-bottom: 18px; }
-.ftr-brand { font-family: var(--fd); font-size: 20px; letter-spacing: .06em; color: var(--ftr-txt); font-weight: 900; margin-right: auto; }
+.ftr { background: var(--txt); color: #f9f5ef; padding: 36px 0 24px; }
+.ftr-i { display: flex; align-items: center; gap: 20px; flex-wrap: wrap; padding-bottom: 22px; border-bottom: 1px solid rgba(255,255,255,.08); margin-bottom: 18px; }
+.ftr-brand { font-family: var(--fd); font-size: 20px; letter-spacing: .06em; color: #f9f5ef; font-weight: 900; margin-right: auto; }
 .ftr-brand em { color: var(--a); font-style: normal; }
 .ftr-links { display: flex; gap: 2px; flex-wrap: wrap; }
-.ftr-lnk { background: none; border: none; cursor: pointer; font-size: 11px; font-weight: 700; color: rgba(var(--ftr-txt-rgb),.45); padding: 6px 11px; border-radius: 4px; text-decoration: none; display: inline-flex; letter-spacing: .08em; text-transform: uppercase; transition: color var(--t) var(--e), background var(--t) var(--e); }
-.ftr-lnk:hover { color: var(--ftr-txt); background: rgba(var(--ftr-txt-rgb),.06); }
+.ftr-lnk { background: none; border: none; cursor: pointer; font-size: 11px; font-weight: 700; color: rgba(249,245,239,.45); padding: 6px 11px; border-radius: 4px; text-decoration: none; display: inline-flex; letter-spacing: .08em; text-transform: uppercase; transition: color var(--t) var(--e), background var(--t) var(--e); }
+.ftr-lnk:hover { color: #f9f5ef; background: rgba(255,255,255,.06); }
 .ftr-lnk:focus-visible { outline: 2px solid var(--a); outline-offset: 2px; }
 .ftr-wa { display: flex; align-items: center; gap: 8px; font-size: 12px; font-weight: 700; color: var(--grn); text-decoration: none; padding: 7px 13px; border-radius: var(--r); border: 1px solid rgba(29,185,84,.25); transition: background var(--t) var(--e), border-color var(--t) var(--e); }
 .ftr-wa:hover { background: rgba(29,185,84,.08); border-color: rgba(29,185,84,.45); }
 .ftr-wa:focus-visible { outline: 2px solid var(--grn); }
 .ftr-wa svg { width: 15px; height: 15px; }
 .ftr-bot { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 8px; }
-.ftr-copy { font-size: 11px; color: rgba(var(--ftr-txt-rgb),.35); }
-.ftr-credit { font-size: 11px; color: rgba(var(--ftr-txt-rgb),.35); }
-.ftr-credit b { color: rgba(var(--ftr-txt-rgb),.6); font-weight: 600; }
+.ftr-copy { font-size: 11px; color: rgba(249,245,239,.35); }
+.ftr-credit { font-size: 11px; color: rgba(249,245,239,.35); }
+.ftr-credit b { color: rgba(249,245,239,.6); font-weight: 600; }
 .ftr-credit em { color: var(--a); font-style: normal; font-weight: 500; }
 
 /* ── FAB ─────────────────────────────────────────────────── */
@@ -490,21 +416,16 @@ const CSS = `
   .menu-grid { grid-template-columns: repeat(2, 1fr); }
   .info-grid { grid-template-columns: 1fr 1fr; }
   .info-block:last-child { grid-column: 1 / -1; }
-  .m-card:nth-child(5n + 1) { grid-column: span 2; grid-row: span 1; }
-  .m-card:nth-child(5n + 1) .m-card-img-wrap { aspect-ratio: 21/9; }
 }
 @media (max-width: 900px) {
   .hero { grid-template-columns: 1fr; }
-  .hero-l { padding: 52px 24px 44px; padding-left: max(24px, calc((100vw - 1140px) / 2 + 24px)); padding-right: max(24px, calc((100vw - 1140px) / 2 + 24px)); }
+  .hero-l { padding: 52px 24px 44px; }
   .hero-r { height: 380px; }
   .cta-inner { grid-template-columns: 1fr; gap: 36px; }
-  .seal-wrap { display: none; }
 }
 @media (max-width: 768px) {
-  .nav { display: none; }
-  .hdr-cta { display: none; }
-  .t-toggle { margin-left: auto; }
-  .ham { display: flex; margin-left: 10px; }
+  .nav,.hdr-cta { display: none; }
+  .ham { display: flex; }
   .menu-sec { padding: 64px 0; }
   .info-sec { padding: 64px 0; }
   .cta-sec { padding: 64px 0; }
@@ -522,40 +443,13 @@ const CSS = `
 @media (max-width: 520px) {
   .cw { padding: 0 16px; }
   .hdr-i { padding: 0 16px; }
-  .hero-l { padding: 84px 16px 36px; }
+  .hero-l { padding: 44px 16px 36px; }
   .hero-r { height: 280px; }
   .menu-grid { grid-template-columns: 1fr; }
-  .m-card:nth-child(5n + 1) { grid-column: span 1; grid-row: span 1; }
-  .m-card:nth-child(5n + 1) .m-card-img-wrap { aspect-ratio: 4/3; }
-  .m-card:nth-child(5n + 1) .m-name { font-size: 20px; }
-  .tabs { width: 100%; justify-content: stretch; overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  .tabs { width: 100%; justify-content: stretch; }
   .tab { flex: 1; text-align: center; }
   .hero-proof { flex-wrap: wrap; }
 }
-@media (max-width: 380px) {
-  .hero-ctas { flex-direction: column; width: 100%; }
-  .hero-ctas .btn { width: 100%; }
-  .hero-proof { flex-direction: column; gap: 12px; }
-  .m-foot { flex-direction: column; align-items: flex-start; }
-  .m-foot .btn { width: 100%; }
-  .cta-inner { gap: 24px; }
-}
-
-/* ── DRAWER & VIEW TRANSITIONS ────────────────────────────── */
-.drawer-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.6); backdrop-filter: blur(8px); z-index: 1000; display: flex; justify-content: flex-end; animation: fadeIn var(--t) var(--e) forwards; }
-.drawer { width: 100%; max-width: 480px; background: var(--bg2); height: 100%; display: flex; flex-direction: column; box-shadow: -10px 0 40px rgba(0,0,0,0.2); animation: slideIn var(--t) var(--e) forwards; overflow-y: auto; }
-@keyframes fadeIn { from { opacity: 0 } to { opacity: 1 } }
-@keyframes slideIn { from { transform: translateX(100%) } to { transform: translateX(0) } }
-.drawer-img-wrap { width: 100%; aspect-ratio: 1; background: var(--bg3); position: relative; flex-shrink: 0; }
-.drawer-img { width: 100%; height: 100%; object-fit: cover; }
-.drawer-close { position: absolute; top: 20px; right: 20px; background: rgba(0,0,0,0.5); color: #fff; border: none; border-radius: 50%; width: 40px; height: 40px; display: flex; align-items: center; justify-content: center; cursor: pointer; backdrop-filter: blur(4px); transition: background var(--t) var(--e); z-index: 10; }
-.drawer-close:hover { background: rgba(0,0,0,0.8); }
-.drawer-body { padding: 32px 24px; display: flex; flex-direction: column; flex: 1; }
-.drawer-name { font-family: var(--fd); font-size: 32px; font-weight: 900; color: var(--txt); line-height: 1.1; margin-bottom: 12px; }
-.drawer-desc { font-size: 16px; color: var(--sub); line-height: 1.6; margin-bottom: 24px; font-weight: 300; }
-.drawer-foot { margin-top: auto; border-top: 1px solid var(--brd); padding-top: 24px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 16px; }
-
-::view-transition-old(root), ::view-transition-new(root) { animation-duration: 0.4s; }
 `;
 
 // ─── Component ────────────────────────────────────────────────────────────────
@@ -564,91 +458,10 @@ export default function CafeAromasPage() {
   const [tab, setTab] = useState<Cat>('Bebidas');
   const [menuOpen, setMenuOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
-  const [theme, setTheme] = useState<'light' | 'dark'>('light');
-  const [mounted, setMounted] = useState(false);
-
-  const [menuItems, setMenuItems] = useState<MenuItem[]>([]);
-  const [loadingMenu, setLoadingMenu] = useState(true);
-  const [selectedItem, setSelectedItem] = useState<MenuItem | null>(null);
-  const isTransitioning = useRef(false);
-
-  const openDrawer = useCallback((item: MenuItem) => {
-    if (isTransitioning.current) return;
-    // @ts-ignore
-    if (!document.startViewTransition) {
-      setSelectedItem(item);
-      return;
-    }
-    
-    try {
-      isTransitioning.current = true;
-      // @ts-ignore
-      const transition = document.startViewTransition(() => {
-        setSelectedItem(item);
-      });
-      transition.finished.finally(() => {
-        isTransitioning.current = false;
-      });
-    } catch (e) {
-      setSelectedItem(item);
-      isTransitioning.current = false;
-    }
-  }, []);
-
-  const closeDrawer = useCallback(() => {
-    if (isTransitioning.current) return;
-    // @ts-ignore
-    if (!document.startViewTransition) {
-      setSelectedItem(null);
-      return;
-    }
-    
-    try {
-      isTransitioning.current = true;
-      // @ts-ignore
-      const transition = document.startViewTransition(() => {
-        setSelectedItem(null);
-      });
-      transition.finished.finally(() => {
-        isTransitioning.current = false;
-      });
-    } catch (e) {
-      setSelectedItem(null);
-      isTransitioning.current = false;
-    }
-  }, []);
-
-  useEffect(() => {
-    setMounted(true);
-    const stored = localStorage.getItem('ca-theme');
-    if (stored === 'dark' || stored === 'light') {
-      setTheme(stored);
-    } else if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
-      setTheme('dark');
-    }
-  }, []);
-
-  useEffect(() => {
-    if (mounted) {
-      localStorage.setItem('ca-theme', theme);
-    }
-  }, [theme, mounted]);
 
   useEffect(() => {
     const h = () => setScrolled(window.scrollY > 40);
     window.addEventListener('scroll', h, { passive: true });
-
-    // Fetch menu
-    fetch('/api/cafe/admin/menu')
-      .then(res => res.json())
-      .then(data => {
-        if (Array.isArray(data)) {
-          setMenuItems(data);
-        }
-      })
-      .catch(err => console.error(err))
-      .finally(() => setLoadingMenu(false));
-
     return () => window.removeEventListener('scroll', h);
   }, []);
 
@@ -658,13 +471,12 @@ export default function CafeAromasPage() {
     document.getElementById(id)?.scrollIntoView({ behavior: 'smooth', block: 'start' });
   }, [closeMenu]);
 
-  // Filter by category and only available items
-  const items = menuItems.filter(m => m.cat === tab && m.disponible !== false);
+  const items = MENU.filter(m => m.cat === tab);
 
   return (
     <>
       <style dangerouslySetInnerHTML={{ __html: CSS }} />
-      <div className={`ca ${theme === 'dark' ? 'dark' : 'light'}`}>
+      <div className="ca">
 
         {/* ── HEADER ──────────────────────────────────────────── */}
         <header className={`hdr${scrolled ? ' on' : ''}`} role="banner">
@@ -679,14 +491,6 @@ export default function CafeAromasPage() {
               <button className="na" onClick={() => goTo('info')}>Horarios</button>
               <button className="na" onClick={() => goTo('contacto')}>Contacto</button>
             </nav>
-
-            <button
-              className="t-toggle"
-              onClick={() => setTheme(t => t === 'light' ? 'dark' : 'light')}
-              aria-label="Cambiar modo claro/oscuro"
-            >
-              {theme === 'dark' ? <IcoSun /> : <IcoMoon />}
-            </button>
 
             <a href={WA_RESERVA} target="_blank" rel="noopener noreferrer" className="hdr-cta" aria-label="Reservar mesa por WhatsApp">
               <IcoWA size={13} /> Reservar mesa
@@ -713,16 +517,12 @@ export default function CafeAromasPage() {
         <section id="inicio" className="hero" aria-labelledby="hero-h1">
           {/* Izquierda */}
           <div className="hero-l">
-            <div className="seal-wrap"><IcoSeal /></div>
-
             <div className="hero-note" aria-label="Lima, Miraflores">
               Miraflores, Lima
             </div>
 
             <h1 id="hero-h1" className="hero-h1">
-              <span className="hero-h1-row">EL CAFÉ</span>
-              <span className="hero-h1-row" style={{ paddingLeft: '8px' }}>QUE TE</span>
-              <mark>MERECES.</mark>
+              EL CAFÉ<br />QUE TE<br /><mark>MERECES.</mark>
             </h1>
 
             <p className="hero-sub">
@@ -806,19 +606,39 @@ export default function CafeAromasPage() {
               className="menu-grid"
             >
               {items.map(item => (
-                <MenuCard key={item.id} item={item} onClick={openDrawer} selectedItemId={selectedItem?.id} />
+                <article key={item.id} className="m-card" aria-label={`${item.nombre} — S/ ${item.precio}`}>
+                  <div className="m-card-img-wrap">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      src={item.img}
+                      alt={item.nombre}
+                      className="m-card-img"
+                      loading="lazy"
+                    />
+                    {item.badge && (
+                      <span className="m-badge">{item.badge}</span>
+                    )}
+                  </div>
+                  <div className="m-card-body">
+                    <h3 className="m-name">{item.nombre}</h3>
+                    <p className="m-desc">{item.desc}</p>
+                    <div className="m-foot">
+                      <div className="m-price" aria-label={`Precio: S/ ${item.precio}`}>
+                        <span>S/ </span>{item.precio}
+                      </div>
+                      <a
+                        href={waItem(item.nombre)}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="btn btn-item"
+                        aria-label={`Pedir ${item.nombre} por WhatsApp`}
+                      >
+                        <IcoWA size={13} /> Pedir
+                      </a>
+                    </div>
+                  </div>
+                </article>
               ))}
-
-              {loadingMenu && (
-                <div style={{ padding: '2rem', textAlign: 'center', gridColumn: '1 / -1' }}>
-                  Cargando nuestra deliciosa carta...
-                </div>
-              )}
-              {!loadingMenu && items.length === 0 && (
-                <div style={{ padding: '2rem', textAlign: 'center', gridColumn: '1 / -1' }}>
-                  Aún no hay productos en esta categoría.
-                </div>
-              )}
             </div>
           </div>
         </section>
@@ -949,38 +769,6 @@ export default function CafeAromasPage() {
         >
           <IcoWA size={27} />
         </a>
-
-        {/* ── DRAWER ──────────────────────────────────────────────── */}
-        {selectedItem && (
-          <div className="drawer-overlay" onClick={closeDrawer}>
-            <div className="drawer" onClick={e => e.stopPropagation()}>
-              <button className="drawer-close" onClick={closeDrawer} aria-label="Cerrar detalles">
-                <IcoClose />
-              </button>
-              <div className="drawer-img-wrap">
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
-                  src={selectedItem.img}
-                  alt={selectedItem.nombre}
-                  className="drawer-img"
-                  style={{ viewTransitionName: `card-img-${selectedItem.id}` }}
-                />
-              </div>
-              <div className="drawer-body">
-                <h2 className="drawer-name">{selectedItem.nombre}</h2>
-                <p className="drawer-desc">{selectedItem.desc}</p>
-                <div className="drawer-foot">
-                  <div className="m-price" style={{ fontSize: '28px' }}>
-                    <span>S/ </span>{selectedItem.precio}
-                  </div>
-                  <a href={waItem(selectedItem.nombre)} target="_blank" rel="noopener noreferrer" className="btn btn-prim" style={{ padding: '16px 32px' }}>
-                    <IcoWA size={18} /> Pedir ahora
-                  </a>
-                </div>
-              </div>
-            </div>
-          </div>
-        )}
       </div>
     </>
   );

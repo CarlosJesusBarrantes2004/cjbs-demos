@@ -1,0 +1,63 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2024-05-18T10:00:00Z",
+  "title": "Design System: Café Aromas",
+  "extensions": {
+    "colorMeta": {
+      "primary": { "role": "primary", "displayName": "Ámbar Quemado", "canonical": "#d97740", "tonalRamp": ["#33190b", "#5e3015", "#8f4b23", "#c76732", "#d97740", "#df9063", "#e6a886", "#f2cca3"] },
+      "primary-hover": { "role": "primary", "displayName": "Ámbar Luminoso", "canonical": "#e58b57", "tonalRamp": ["#361d0d", "#64381b", "#96552c", "#cc7844", "#e58b57", "#e99f73", "#eeb593", "#f6d8b7"] },
+      "neutral-bg": { "role": "neutral", "displayName": "Tierra Profunda", "canonical": "#1a1614", "tonalRamp": ["#080605", "#100d0b", "#1a1614", "#292421", "#3e3733", "#5c534e", "#8c817b", "#d1c9c4"] },
+      "neutral-bg-raised": { "role": "neutral", "displayName": "Tierra Elevada", "canonical": "#231d1a", "tonalRamp": ["#0b0807", "#171210", "#231d1a", "#362e2a", "#524641", "#786862", "#b3a098", "#f0e3de"] },
+      "neutral-text": { "role": "neutral", "displayName": "Crema Textual", "canonical": "#f9f5ef", "tonalRamp": ["#302e2b", "#5e5954", "#918b83", "#c9c3ba", "#f9f5ef", "#faf7f2", "#fcfafa", "#ffffff"] }
+    },
+    "typographyMeta": {
+      "display": { "displayName": "Display (Playfair)", "purpose": "El grito principal del Hero. Usado con tracking negativo y rotaciones sutiles superpuestas." },
+      "headline": { "displayName": "Headline", "purpose": "Títulos de sección como MENÚ." }
+    },
+    "shadows": [
+      { "name": "glow-magnetico", "value": "0 4px 18px rgba(217,119,64,.25)", "purpose": "Resplandor ambiental de color ámbar quemado que emana de los botones interactivos." }
+    ]
+  },
+  "components": [
+    {
+      "name": "Magnetic Menu Card",
+      "kind": "card",
+      "refersTo": "card-primary",
+      "description": "Tarjeta de menú asimétrica con paralaje de imagen y tracking del ratón.",
+      "html": "<article class=\"ds-m-card\"><div class=\"ds-m-card-inner\"><div class=\"ds-m-card-img-wrap\"><img src=\"https://images.unsplash.com/photo-1514432324607-a09d9b4aefdd?q=80&w=400\" class=\"ds-m-card-img\"/></div><div class=\"ds-m-card-body\"><h3 class=\"ds-m-name\">Latte de Vainilla</h3><p class=\"ds-m-desc\">Un toque dulce y cálido.</p><div class=\"ds-m-foot\"><div class=\"ds-m-price\"><span>S/ </span>12.00</div><button class=\"ds-btn-item\">Pedir</button></div></div></div></article>",
+      "css": ".ds-m-card { background: #231d1a; border: 1px solid #3e3530; border-radius: 12px; overflow: hidden; display: flex; flex-direction: column; transition: box-shadow 0.4s ease, border-color 0.2s ease; transform-style: preserve-3d; font-family: 'Chivo', sans-serif; color: #f9f5ef; width: 300px; } .ds-m-card:hover { box-shadow: 0 20px 40px rgba(0,0,0,0.4); border-color: #4f443e; transform: perspective(1000px) rotateX(2deg) rotateY(-2deg); } .ds-m-card-inner { transform: translateZ(30px); transition: transform 0.15s linear; display: flex; flex-direction: column; } .ds-m-card-img-wrap { aspect-ratio: 4/3; overflow: hidden; background: #2e2723; } .ds-m-card-img { width: 100%; height: 100%; object-fit: cover; transition: transform 0.6s ease; } .ds-m-card:hover .ds-m-card-img { transform: scale(1.08); } .ds-m-card-body { padding: 18px 20px 20px; display: flex; flex-direction: column; gap: 8px; } .ds-m-name { font-size: 16px; font-weight: 700; margin: 0; line-height: 1.2; } .ds-m-desc { font-size: 13px; color: #c1b2a6; margin: 0; font-weight: 300; } .ds-m-foot { display: flex; align-items: center; justify-content: space-between; padding-top: 14px; border-top: 1px solid #3e3530; } .ds-m-price { font-size: 22px; color: #d97740; font-weight: 900; } .ds-m-price span { font-size: 13px; opacity: 0.7; } .ds-btn-item { background: rgba(217,119,64,0.12); color: #d97740; padding: 9px 16px; border: 1px solid rgba(217,119,64,0.28); border-radius: 4px; text-transform: uppercase; font-size: 11px; font-weight: 700; cursor: pointer; transition: 0.2s; } .ds-btn-item:hover { background: #d97740; color: #fff; border-color: #d97740; }"
+    },
+    {
+      "name": "Primary Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "Botón principal con glow interactivo.",
+      "html": "<button class=\"ds-btn-prim\">Reservar Mesa</button>",
+      "css": ".ds-btn-prim { background: #d97740; color: #fff; padding: 13px 24px; border: none; border-radius: 8px; font-family: 'Chivo', sans-serif; font-weight: 700; text-transform: uppercase; font-size: 12px; letter-spacing: 0.05em; cursor: pointer; transition: all 0.2s ease; box-shadow: 0 2px 12px rgba(217,119,64,0.15); } .ds-btn-prim:hover { background: #e58b57; transform: translateY(-1px); box-shadow: 0 4px 18px rgba(217,119,64,0.25); }"
+    }
+  ],
+  "narrative": {
+    "northStar": "El Refugio Nocturno",
+    "overview": "El diseño es elegante pero rebelde. Presenta una oscuridad cálida y envolvente que se siente íntima, magnética y premium. Rompemos las convenciones de las cuadrículas genéricas para ofrecer un ritmo asimétrico e impredecible.",
+    "keyCharacteristics": [
+      "Modo oscuro nativo fundamentado en Marrones Tierra profundos, sin usar negros puros.",
+      "Interacciones Tilt 3D Magnético que brindan tactilidad a las tarjetas del menú.",
+      "Tipografía heroica superpuesta y ligeramente rotada, evocando un sello artesanal.",
+      "Grilla asimétrica audaz (grid-auto-flow: dense), destacando ítems clave de forma impredecible."
+    ],
+    "rules": [
+      { "name": "The Warm Dark Rule", "body": "Nunca se usa negro puro (#000000) ni blanco puro (#ffffff) en las superficies grandes. Todo el contraste se construye sobre la rampa de temperatura de los granos de café.", "section": "colors" },
+      { "name": "The Handcrafted Overlap Rule", "body": "Los textos gigantes (Display) deben sentirse estampados a mano: superposición, tracking negativo extremo y rotación en elementos clave.", "section": "typography" }
+    ],
+    "dos": [
+      "Do usar la técnica de animation-timeline: scroll() para dar vida a los elementos gráficos fijos a medida que el usuario desciende.",
+      "Do emplear contrastes basados en la temperatura de color y mantener la legibilidad por encima de AA.",
+      "Do dejar que la asimetría dirija la mirada, dándole más área a los ítems que merecen ser destacados visualmente."
+    ],
+    "donts": [
+      "Don't aplicar sombras negras de desenfoque alto; se perderán en el fondo oscuro. Usa resplandores (glows) del color primario.",
+      "Don't alinear la tipografía del Hero perfectamente. Debes abrazar el caos ordenado y el solapamiento.",
+      "Don't olvidar el fallback de animaciones para los navegadores sin soporte a scroll-driven animations."
+    ]
+  }
+}
